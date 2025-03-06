@@ -4,6 +4,9 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Navigation from './src/navigation/Navigation';
 import './src/unistyles/unistyles'
 import SocketProvider from './src/state/context/SockeContext';
+import axios from 'axios';
+import { Config } from './src/config/config';
+
 const App = () => {
     return (<GestureHandlerRootView style={styles.container} >
         <SocketProvider>

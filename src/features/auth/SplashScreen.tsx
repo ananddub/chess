@@ -4,13 +4,17 @@ import { createStyleSheet, useStyles } from 'react-native-unistyles'
 import LottiHosre from './component/LottiHosre'
 import responsive from '../../helpers/responsive'
 import { navigate } from '../../helpers/NavigationUtil'
+import { useUser } from '../../state/store/user'
 
 export default function SplashScreen() {
     const { styles, theme } = useStyles(unistyles)
+    const { user } = useUser(state => state)
     useEffect(() => {
         setTimeout(() => {
-            navigate('login')
-        }, 2000)
+            if (user) navigate('Tab')
+            else
+                navigate('login')
+        }, 3000)
     }, [])
     return (
         <View style={styles.container}>

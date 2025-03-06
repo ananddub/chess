@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { createStyleSheet, useStyles } from 'react-native-unistyles'
 import { Pressable, TextInput } from 'react-native-gesture-handler'
 import { Formik } from 'formik';
@@ -8,6 +8,8 @@ import responsive from '../../helpers/responsive'
 import { navigate } from '../../helpers/NavigationUtil';
 import LottiHosre from './component/LottiHosre';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { login } from '../../service/user';
+import { useUser } from '../../state/store/user';
 const validationSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Email is required'),
     password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required')
@@ -17,13 +19,23 @@ export default function Login() {
     const [focused, setFocused] = useState<null | string>(null);
     const [onLoading, setLoading] = useState<boolean>(false)
     const [emailerror, setEmailError] = useState<string>();
-
-    const handleSubmit = (values: { email: string, password: string }) => {
+    const { setUser, user } = useUser(state => state)
+    useEffect(() => {
+        console.log('user from login', {
+            user
+        })
+    }, [user])
+    const handleSubmit = async (values: { email: string, password: string }) => {
         try {
             setLoading(true)
+            const response = await login(values)
+            console.log(user)
+            setUser(response.user)
+            navigate('Tab')
+        } catch (err: any) {
+            console.log(err?.response?.data?.error);
+            setEmailError(err?.response?.data?.error as string);
 
-        } catch (err) {
-            console.log(err)
         }
         finally {
             setLoading(false)
@@ -70,8 +82,8 @@ export default function Login() {
                                     <TextInput
                                         style={styles.input}
                                         placeholder="Your email"
-                                        onChangeText={() => {
-                                            handleChange('email')
+                                        onChangeText={(e) => {
+                                            handleChange('email')(e.toLowerCase())
                                             setEmailError('')
                                         }}
                                         onFocus={() => setFocused('email')}

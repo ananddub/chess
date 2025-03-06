@@ -5,6 +5,7 @@ import {
     TextInput,
     KeyboardAvoidingView,
     Platform,
+    Alert,
 } from 'react-native';
 import React, { useRef, useState } from 'react';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
@@ -15,7 +16,7 @@ import { goBack } from '../../helpers/NavigationUtil';
 import { ScrollView } from 'react-native-gesture-handler';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LottiHosre from './component/LottiHosre';
-import { ThemeContext } from '@react-navigation/native';
+import { register } from '../../service/user';
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -33,12 +34,16 @@ export default function SignUp() {
     const [focused, setFocused] = useState<null | string>(null);
     const [emailerror, setEmailError] = useState<string>('');
     const [onLoading, setLoading] = useState<boolean>(false);
-    const handleSubmit = (values: { email: string; password: string }) => {
+    const handleSubmit = async (values: { name: string, email: string; password: string }) => {
         try {
             setLoading(true);
-            console.log('Sign Up Data:', values);
-        } catch (err) {
-            console.log(err);
+            const response = await register(values);
+            Alert.alert("your account created suscessfully")
+            console.log('Sign Up Data:', response);
+            goBack()
+        } catch (err: any) {
+            console.log(err?.response?.data?.error);
+            setEmailError(err?.response?.data?.error as string);
         } finally {
             setLoading(false);
         }
@@ -97,7 +102,7 @@ export default function SignUp() {
                                             handleBlur('name');
                                             setFocused(null);
                                         }}
-                                        value={values.email}
+                                        value={values.name}
                                     />
                                 </View>
                                 {touched.name && errors.name && (
@@ -113,7 +118,10 @@ export default function SignUp() {
                                         style={styles.input}
                                         placeholder="Your email"
                                         autoCapitalize="none"
-                                        onChangeText={handleChange('email')}
+                                        onChangeText={(e) => {
+                                            handleChange('email')(e)
+                                            setEmailError('')
+                                        }}
                                         onFocus={() => {
                                             setFocused('email');
                                             scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true });
@@ -203,12 +211,10 @@ export default function SignUp() {
 
                         <TouchableOpacity
                             activeOpacity={0.8}
-                            onPress={() => {
-                                goBack();
-                            }}
+                            onPress={() => { goBack(); }}
                             style={styles.bottom}>
                             <Text style={styles.logintext}>
-                                Aleady have an account?{' '}
+                                Aleady have an account?
                                 <Text style={styles.signupLink}>Log In</Text>
                             </Text>
                         </TouchableOpacity>
