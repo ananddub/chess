@@ -10,7 +10,7 @@ export default function SplashScreen() {
     useEffect(() => {
         setTimeout(() => {
             navigate('login')
-        }, 5000)
+        }, 2000)
     }, [])
     return (
         <View style={styles.container}>

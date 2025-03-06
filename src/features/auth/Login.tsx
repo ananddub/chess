@@ -6,19 +6,38 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import responsive from '../../helpers/responsive'
 import { navigate } from '../../helpers/NavigationUtil';
-import { IconImage } from '../../helpers/GetIcons';
 import LottiHosre from './component/LottiHosre';
-
+import Ionicons from 'react-native-vector-icons/Ionicons';
 const validationSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Email is required'),
     password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required')
 });
 export default function Login() {
-    const { styles } = useStyles(stylesheet);
+    const { styles, theme } = useStyles(stylesheet);
     const [focused, setFocused] = useState<null | string>(null);
+    const [onLoading, setLoading] = useState<boolean>(false)
     const [emailerror, setEmailError] = useState<string>();
+
     const handleSubmit = (values: { email: string, password: string }) => {
+        try {
+            setLoading(true)
+
+        } catch (err) {
+            console.log(err)
+        }
+        finally {
+            setLoading(false)
+        }
     }
+
+    const iconActiveColor = (focused: boolean) => {
+        if (focused) {
+            return theme.colors.primary
+        } else {
+            return theme.colors.lightsecondary(0.3)
+        }
+    }
+
     return (
         <Formik
             initialValues={{ email: '', password: '' }}
@@ -30,17 +49,7 @@ export default function Login() {
 
                     <View style={styles.header}>
                         <View style={styles.logoContainer}>
-                            {
-                                <LottiHosre size={80} />
-                                // <Image
-                                //                                 source={IconImage.wQ}
-                                //                                 style={styles.logo(30)}
-                                //                             />
-                                // <Text style={styles.logoText}>Chess</Text>
-
-                            }
-
-
+                            <LottiHosre size={80} />
                         </View>
 
                         <Text style={styles.title}>Sign in to your Account</Text>
@@ -54,6 +63,10 @@ export default function Login() {
                             <Text style={styles.inputText}>Email</Text>
                             <View style={{ gap: 6 }}>
                                 <View style={styles.inputContainer(focused === 'email')}>
+                                    <Ionicons name="mail-outline" size={responsive.fontSize(17)}
+                                        color={iconActiveColor(focused === "email")}
+                                    />
+
                                     <TextInput
                                         style={styles.input}
                                         placeholder="Your email"
@@ -83,6 +96,9 @@ export default function Login() {
                             <View style={{ gap: 6 }}>
 
                                 <View style={styles.inputContainer(focused === 'password')}>
+                                    <Ionicons name="lock-closed-outline" size={responsive.fontSize(17)}
+                                        color={iconActiveColor(focused === "password")}
+                                    />
                                     <TextInput
                                         style={styles.input}
                                         placeholder="Your password"
@@ -106,10 +122,18 @@ export default function Login() {
                     <TouchableOpacity>
                         <Text style={styles.forgotPassword}>Forgot Password?</Text>
                     </TouchableOpacity>
+                    {
+                        onLoading ?
+                            <View style={styles.loader}>
+                                <View style={{ transform: [{ translateY: -responsive.height(50) / 5 }] }}>
+                                    <LottiHosre size={60} autoPlay loop />
+                                </View>
+                            </View> :
+                            <TouchableOpacity style={styles.loginButton} onPress={handleSubmit}>
+                                <Text style={styles.loginText}>Log In</Text>
+                            </TouchableOpacity>
+                    }
 
-                    <TouchableOpacity style={styles.loginButton} onPress={handleSubmit}>
-                        <Text style={styles.loginText}>Log In</Text>
-                    </TouchableOpacity>
 
 
                     <TouchableOpacity
@@ -169,8 +193,9 @@ const stylesheet = createStyleSheet((theme, rtl) => ({
         backgroundColor: focused ? theme.colors.lightprimary(0.05) : theme.colors.background,
         borderWidth: 1,
         borderRadius: responsive.borderRadius(10),
-        paddingHorizontal: responsive.padding(15),
+        paddingHorizontal: responsive.padding(10),
         width: "100%",
+        gap: 7
     }),
     errorText: {
         fontSize: responsive.fontSize(10),
@@ -245,5 +270,15 @@ const stylesheet = createStyleSheet((theme, rtl) => ({
         color: "#000",
         fontSize: responsive.fontSize(16),
         fontWeight: '700'
+    },
+    loader: {
+        borderRadius: 10,
+        borderColor: theme.colors.lightsecondary(0.4),
+        width: '100%',
+        height: responsive.height(50),
+        paddingRight: responsive.padding(10),
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingBottom: responsive.padding(10)
     }
 }));

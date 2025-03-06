@@ -8,6 +8,7 @@ import {
     useRef,
 } from 'react';
 import { Socket, io } from 'socket.io-client';
+import { Config } from '../../config/config';
 interface IProps {
     children: JSX.Element;
 }
@@ -18,16 +19,18 @@ const socketContext = createContext<{
 export default function SocketProvider({ children }: IProps) {
     const socketref = useRef<Socket>(null);
     useEffect(() => {
-        socketref.current = io('http://localhost:3000');
+        socketref.current = io(Config.SOKCET_URL);
         socketref.current.on('connect', () => {
-
+            console.log("socket connected successfully")
         })
         socketref.current.on('disconnect', (data) => {
             console.log(data);
         })
+
         return () => {
-            if (socketref.current)
+            if (socketref.current) {
                 socketref.current.disconnect();
+            }
         };
     }, []);
     return (

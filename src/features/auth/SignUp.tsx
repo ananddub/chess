@@ -1,48 +1,66 @@
-
-import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    TextInput,
+    KeyboardAvoidingView,
+    Platform,
+} from 'react-native';
 import React, { useRef, useState } from 'react';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import responsive from '../../helpers/responsive';
-import { goBack, navigate } from '../../helpers/NavigationUtil';
-import { Image } from 'moti';
-import { IconImage } from '../../helpers/GetIcons';
+import { goBack } from '../../helpers/NavigationUtil';
 import { ScrollView } from 'react-native-gesture-handler';
-import { scrollTo } from 'react-native-reanimated';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import LottiHosre from './component/LottiHosre';
+import { ThemeContext } from '@react-navigation/native';
 
 const validationSchema = Yup.object().shape({
-
     name: Yup.string().required('Name is required'),
     email: Yup.string().email('Invalid email').required('Email is required'),
-    password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
+    password: Yup.string()
+        .min(6, 'Password must be at least 6 characters')
+        .required('Password is required'),
     confirmPassword: Yup.string()
         .oneOf([Yup.ref('password'), ''], 'Passwords must match')
         .required('Confirm password is required'),
 });
 
 export default function SignUp() {
-    const { styles } = useStyles(stylesheet);
+    const { styles, theme } = useStyles(stylesheet);
     const [focused, setFocused] = useState<null | string>(null);
     const [emailerror, setEmailError] = useState<string>('');
-    const handleSubmit = (values: { email: string, password: string }) => {
-        console.log('Sign Up Data:', values);
+    const [onLoading, setLoading] = useState<boolean>(false);
+    const handleSubmit = (values: { email: string; password: string }) => {
+        try {
+            setLoading(true);
+            console.log('Sign Up Data:', values);
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setLoading(false);
+        }
     };
-    const scrollRef = useRef<ScrollView>(null)
+    const iconActiveColor = (focused: boolean) => {
+        if (focused) {
+            return theme.colors.primary
+        } else {
+            return theme.colors.lightsecondary(0.3)
+        }
+    }
+    const scrollRef = useRef<ScrollView>(null);
     return (
         <Formik
             initialValues={{ email: '', password: '', confirmPassword: '', name: '' }}
             validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-        >
+            onSubmit={handleSubmit}>
             {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-                <KeyboardAvoidingView style={styles.keyboardavoid}
-                    behavior={Platform.OS === "ios" ? "padding" : "height"}
-                >
-                    <ScrollView
-                        ref={scrollRef}
-                        style={styles.container}>
+                <KeyboardAvoidingView
+                    style={styles.keyboardavoid}
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                    <ScrollView ref={scrollRef} style={styles.container}>
                         <View style={styles.header}>
                             <View style={styles.logoContainer}>
                                 {
@@ -63,14 +81,17 @@ export default function SignUp() {
                             <View style={styles.inputCn}>
                                 <Text style={styles.inputText}>Name</Text>
                                 <View style={styles.inputContainer(focused === 'name')}>
+
+                                    <Ionicons name="person-outline" size={responsive.fontSize(17)}
+                                        color={iconActiveColor(focused === "name")} />
                                     <TextInput
                                         style={styles.input}
                                         placeholder="Your Name"
                                         autoCapitalize="none"
                                         onChangeText={handleChange('name')}
                                         onFocus={() => {
-                                            scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true })
-                                            setFocused('name')
+                                            scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true });
+                                            setFocused('name');
                                         }}
                                         onBlur={() => {
                                             handleBlur('name');
@@ -79,19 +100,23 @@ export default function SignUp() {
                                         value={values.email}
                                     />
                                 </View>
-                                {touched.name && errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
+                                {touched.name && errors.name && (
+                                    <Text style={styles.errorText}>{errors.name}</Text>
+                                )}
                             </View>
                             <View style={styles.inputCn}>
                                 <Text style={styles.inputText}>Email</Text>
                                 <View style={styles.inputContainer(focused === 'email')}>
+                                    <Ionicons name="mail-outline" size={responsive.fontSize(17)}
+                                        color={iconActiveColor(focused === "email")} />
                                     <TextInput
                                         style={styles.input}
                                         placeholder="Your email"
                                         autoCapitalize="none"
                                         onChangeText={handleChange('email')}
                                         onFocus={() => {
-                                            setFocused('email')
-                                            scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true })
+                                            setFocused('email');
+                                            scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true });
                                         }}
                                         onBlur={() => {
                                             handleBlur('email');
@@ -100,13 +125,20 @@ export default function SignUp() {
                                         value={values.email}
                                     />
                                 </View>
-                                {touched.email && errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
-                                {emailerror && <Text style={styles.errorText}>{emailerror}</Text>}
+                                {touched.email && errors.email && (
+                                    <Text style={styles.errorText}>{errors.email}</Text>
+                                )}
+                                {emailerror && (
+                                    <Text style={styles.errorText}>{emailerror}</Text>
+                                )}
                             </View>
 
                             <View style={styles.inputCn}>
                                 <Text style={styles.inputText}>Password</Text>
                                 <View style={styles.inputContainer(focused === 'password')}>
+
+                                    <Ionicons name="lock-closed-outline" size={responsive.fontSize(17)}
+                                        color={iconActiveColor(focused === "password")} />
                                     <TextInput
                                         style={styles.input}
                                         placeholder="Your password"
@@ -114,8 +146,8 @@ export default function SignUp() {
                                         autoCapitalize="none"
                                         onChangeText={handleChange('password')}
                                         onFocus={() => {
-                                            setFocused('password')
-                                            scrollRef.current?.scrollToEnd({ animated: true })
+                                            setFocused('password');
+                                            scrollRef.current?.scrollToEnd({ animated: true });
                                         }}
                                         onBlur={() => {
                                             handleBlur('password');
@@ -124,12 +156,17 @@ export default function SignUp() {
                                         value={values.password}
                                     />
                                 </View>
-                                {touched.password && errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
+                                {touched.password && errors.password && (
+                                    <Text style={styles.errorText}>{errors.password}</Text>
+                                )}
                             </View>
 
                             <View style={styles.inputCn}>
                                 <Text style={styles.inputText}>Confirm Password</Text>
-                                <View style={styles.inputContainer(focused === 'confirmPassword')}>
+                                <View
+                                    style={styles.inputContainer(focused === 'confirmPassword')}>
+                                    <Ionicons name="lock-closed-outline" size={responsive.fontSize(17)}
+                                        color={iconActiveColor(focused === "confirmPassword")} />
                                     <TextInput
                                         style={styles.input}
                                         placeholder="Confirm password"
@@ -137,8 +174,8 @@ export default function SignUp() {
                                         autoCapitalize="none"
                                         onChangeText={handleChange('confirmPassword')}
                                         onFocus={() => {
-                                            setFocused('confirmPassword')
-                                            scrollRef.current?.scrollToEnd({ animated: true })
+                                            setFocused('confirmPassword');
+                                            scrollRef.current?.scrollToEnd({ animated: true });
                                         }}
                                         onBlur={() => {
                                             handleBlur('confirmPassword');
@@ -147,24 +184,36 @@ export default function SignUp() {
                                         value={values.confirmPassword}
                                     />
                                 </View>
-                                {touched.confirmPassword && errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword}</Text>}
+                                {touched.confirmPassword && errors.confirmPassword && (
+                                    <Text style={styles.errorText}>{errors.confirmPassword}</Text>
+                                )}
                             </View>
                         </View>
+                        {onLoading ? (
+                            <View style={styles.loader}>
+                                <LottiHosre size={60} autoPlay loop />
+                            </View>
+                        ) : (
+                            <TouchableOpacity
+                                style={styles.signupButton}
+                                onPress={handleSubmit}>
+                                {<Text style={styles.signupText}>Sign Up</Text>}
+                            </TouchableOpacity>
+                        )}
 
-                        <TouchableOpacity style={styles.signupButton} onPress={handleSubmit}>
-                            <Text style={styles.signupText}>Sign Up</Text>
-                        </TouchableOpacity>
                         <TouchableOpacity
                             activeOpacity={0.8}
-                            onPress={() => { goBack() }}
+                            onPress={() => {
+                                goBack();
+                            }}
                             style={styles.bottom}>
                             <Text style={styles.logintext}>
-                                Aleady have an account? <Text style={styles.signupLink}>Log In</Text>
+                                Aleady have an account?{' '}
+                                <Text style={styles.signupLink}>Log In</Text>
                             </Text>
                         </TouchableOpacity>
                     </ScrollView>
                 </KeyboardAvoidingView>
-
             )}
         </Formik>
     );
@@ -180,16 +229,16 @@ const stylesheet = createStyleSheet((theme, rtl) => ({
     header: {
         gap: 20,
         marginBottom: 20,
-        paddingRight: responsive.padding(60)
+        paddingRight: responsive.padding(60),
     },
     title: {
         fontSize: responsive.fontSize(36),
-        fontWeight: "700",
-        color: "#000",
+        fontWeight: '700',
+        color: '#000',
     },
     subtitle: {
         fontSize: responsive.fontSize(13),
-        color: "#888",
+        color: '#888',
     },
     logo: (value: number) => ({
         width: responsive.width(value),
@@ -200,19 +249,22 @@ const stylesheet = createStyleSheet((theme, rtl) => ({
         gap: 6,
     },
     inputText: {
-        fontSize: responsive.fontSize(12),
+        fontSize: responsive.fontSize(13),
         paddingLeft: responsive.padding(5),
-        color: "#888",
+        color: '#888',
     },
-    inputContainer: (focused) => ({
-        flexDirection: "row",
-        alignItems: "center",
+    inputContainer: focused => ({
+        flexDirection: 'row',
+        alignItems: 'center',
         borderColor: focused ? theme.colors.primary : theme.colors.lightgrey,
-        backgroundColor: focused ? theme.colors.lightprimary(0.05) : theme.colors.background,
+        backgroundColor: focused
+            ? theme.colors.lightprimary(0.05)
+            : theme.colors.background,
         borderWidth: 1,
         borderRadius: responsive.borderRadius(10),
-        paddingHorizontal: responsive.padding(15),
-        width: "100%",
+        paddingHorizontal: responsive.padding(12),
+        gap: 10,
+        width: '100%',
     }),
     errorText: {
         fontSize: responsive.fontSize(10),
@@ -227,21 +279,21 @@ const stylesheet = createStyleSheet((theme, rtl) => ({
         backgroundColor: theme.colors.secondary,
         paddingVertical: responsive.padding(13),
         borderRadius: responsive.borderRadius(10),
-        alignItems: "center",
+        alignItems: 'center',
         marginTop: responsive.margin(20),
     },
     signupText: {
-        color: "#fff",
+        color: '#fff',
         fontSize: responsive.fontSize(16),
-        fontWeight: "bold",
+        fontWeight: 'bold',
     },
     bottom: {
-        justifyContent: "center",
-        alignItems: "center",
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     signupLink: {
         color: theme.colors.primary,
-        fontWeight: "bold",
+        fontWeight: 'bold',
     },
     logintext: {
         marginTop: responsive.margin(20),
@@ -250,17 +302,21 @@ const stylesheet = createStyleSheet((theme, rtl) => ({
     logoContainer: {
         flexDirection: 'row',
         gap: 10,
-        alignItems: 'center'
+        alignItems: 'center',
     },
     logoText: {
-        color: "#000",
+        color: '#000',
         fontSize: responsive.fontSize(16),
-        fontWeight: '700'
+        fontWeight: '700',
     },
     keyboardavoid: {
         flex: 1,
         paddingTop: rtl.insets.top,
-        backgroundColor: theme.colors.background
-    }
+        backgroundColor: theme.colors.background,
+    },
+    loader: {
+        width: rtl.screen.width - responsive.width(50),
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 }));
-

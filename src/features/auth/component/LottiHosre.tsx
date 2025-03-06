@@ -27,7 +27,8 @@ const unistyles = createStyleSheet((theme, rlt) => {
     return {
         container: (value: number) => ({
             width: responsive.width(value),
-            height: responsive.height(value)
+            height: responsive.height(value),
+
         })
     }
 })
