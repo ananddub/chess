@@ -5,6 +5,7 @@ const colors = {
     error: '#ff0000',
     background: '#ffffff',
     lightgrey: '#cccccc',
+    lightbackground: '#ebedee',
     lightprimary: (value: number = 0.1) => `rgba(26,186,132,${value})`,
     lightsecondary: (value: number = 0.1) => `rgba(0,0,0,${value})`
 }

@@ -1,0 +1,46 @@
+diff --git a/node_modules/react-native-chessboard/src/components/piece/visual-piece.tsx b/node_modules/react-native-chessboard/src/components/piece/visual-piece.tsx
+index 2095fde..8124743 100644
+--- a/node_modules/react-native-chessboard/src/components/piece/visual-piece.tsx
++++ b/node_modules/react-native-chessboard/src/components/piece/visual-piece.tsx
+@@ -1,25 +1,28 @@
+-import React from 'react';
++import React, { useContext } from 'react';
+ import { Image, ImageProps } from 'react-native';
+ import { PIECES } from '../../constants';
+ import { useChessboardProps } from '../../context/props-context/hooks';
++import { useRotate } from '../../../../../src/state/context/chessrotate'
+ import type { PieceType } from '../../types';
+ 
+ type ChessPieceType = {
+-  id: PieceType;
++    id: PieceType;
+ } & Partial<ImageProps>;
+ 
+ const ChessPiece: React.FC<ChessPieceType> = React.memo(({ id, ...rest }) => {
+-  const { pieceSize, renderPiece } = useChessboardProps();
+-
+-  return (
+-    renderPiece?.(id) ?? (
+-      <Image
+-        style={[{ width: pieceSize, height: pieceSize }, rest.style]}
+-        {...rest}
+-        source={PIECES[id]}
+-      />
+-    )
+-  );
++    const { pieceSize, renderPiece } = useChessboardProps();
++    const { rotate } = useRotate()
++    return (
++        renderPiece?.(id) ?? (
++            <Image
++                style={[{ width: pieceSize, height: pieceSize }, rest.style,
++                rotate ? { transform: [{ rotate: '180deg' }] } : {}
++                ]}
++                {...rest}
++                source={PIECES[id]}
++            />
++        )
++    );
+ });
+ 
+ export { ChessPiece };

@@ -17,7 +17,8 @@ export enum Channels {
     ON_ACCEPT_JOIN = 'on_acceptJoin',
     ON_MESSAGE = 'on_message',
     ON_REJECT_JOIN = 'on_rejectJoin',
-    ON_DISCONNECT = 'on_disconnect',
+    ON_DISCONNECT = 'disconnect',
+    RON_DISCONNECT = 'on_disconnect_redis',
     ON_CONNECT = 'on_connects',
     ON_CREATE = 'on_create',
     ON_WATCH = 'on_watch',
@@ -36,4 +37,9 @@ export enum UserChannels {
 
 
 
+
+export enum TURN {
+    WHITE = 'white',
+    BLACK = 'black',
+}
 

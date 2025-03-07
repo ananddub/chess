@@ -16,9 +16,10 @@ export default function Home() {
     const { styles } = useStyles(unistyle);
     const { user } = useUser(state => state);
     const { socketref } = useSocket();
-    useEffect(() => {
+
+    const onlinePlay = () => {
         navigate('Game')
-    }, []);
+    }
     return (
         <View style={styles.container}>
             <View style={styles.paddingInset} />
@@ -27,7 +28,9 @@ export default function Home() {
                 style={styles.scorllcontainer}
                 showsVerticalScrollIndicator={false}>
                 <View>
-                    <Card header="Play Online" text="10 min vs Random" />
+                    <Card
+                        onPress={onlinePlay}
+                        header="Play Online" text="10 min vs Random" />
                     <Card header="Play Offline" text="10 min vs Random" />
                     <Card header="Play a Bot" text="Martin M. Martin - Friendly" />
                 </View>
@@ -56,7 +59,7 @@ const unistyle = createStyleSheet((theme, rlt) => {
             paddingTop: rlt.insets.top,
         },
         scorllcontainer: {
-            backgroundColor: '#ebedee',
+            backgroundColor: theme.colors.lightbackground,
             paddingTop: 10,
             gap: 10,
             flex: 1,
