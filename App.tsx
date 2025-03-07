@@ -1,26 +1,27 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import {StyleSheet, View} from 'react-native';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import Navigation from './src/navigation/Navigation';
-import './src/unistyles/unistyles'
-import SocketProvider from './src/state/context/SockeContext';
+import './src/unistyles/unistyles';
+import SocketProvider from './src/state/context/SocketContext';
 import axios from 'axios';
-import { Config } from './src/config/config';
+import {Config} from './src/config/config';
 
 const App = () => {
-    return (<GestureHandlerRootView style={styles.container} >
-        <SocketProvider>
-            <Navigation />
-        </SocketProvider>
+  return (
+    <GestureHandlerRootView style={styles.container}>
+      <SocketProvider>
+        <Navigation />
+      </SocketProvider>
     </GestureHandlerRootView>
-    )
+  );
 };
 
 export default App;
 
 export const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-    }
-}) 
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+});

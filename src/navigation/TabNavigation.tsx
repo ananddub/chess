@@ -1,29 +1,24 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import Home from "../features/home/home"
-import { Image } from "moti"
-import { IconImage } from "../helpers/GetIcons"
-import responsive from "../helpers/responsive"
-import { TabBarIOS } from "react-native"
 import CustomTab from "../component/CustomTab"
-interface Props {
-    focused: boolean,
-    color: string,
-    size: number
-}
+import Home from "../features/home/Home"
+import Freind from "../features/freind/Freind"
+import Group from "../features/group/Group"
+import TopList from "../features/toplist/TopList"
 
 const Tab = createBottomTabNavigator()
 export default function TabNavigation() {
     return (
         <Tab.Navigator
             tabBar={(props) => <CustomTab {...props} />}
+            initialRouteName="home"
             screenOptions={{
                 headerShown: false
             }}
         >
             <Tab.Screen name="home" component={Home} />
-            <Tab.Screen name="freind" component={Home} />
-            <Tab.Screen name="group" component={Home} />
-            <Tab.Screen name="toplist" component={Home} />
+            <Tab.Screen name="freind" component={Freind} />
+            <Tab.Screen name="group" component={Group} />
+            <Tab.Screen name="toplist" component={TopList} />
         </Tab.Navigator>
     )
 }

@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-const App = () => {
+const Game = () => {
 
     const chessboardRef = useRef<ChessboardRef>(null);
 
@@ -20,7 +20,7 @@ const App = () => {
     }, []);
 
 
-    return (<GestureHandlerRootView style={styles.container} >
+    return (
         <View
             style={{
                 pointerEvents: 'auto'
@@ -31,11 +31,10 @@ const App = () => {
                 onMove={(move) => console.log(move)}
             />
         </View>
-    </GestureHandlerRootView>
     )
 };
 
-export default App;
+export default Game;
 
 export const styles = StyleSheet.create({
     container: {

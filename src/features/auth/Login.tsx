@@ -20,16 +20,14 @@ export default function Login() {
     const [onLoading, setLoading] = useState<boolean>(false)
     const [emailerror, setEmailError] = useState<string>();
     const { setUser, user } = useUser(state => state)
-    useEffect(() => {
-        console.log('user from login', {
-            user
-        })
-    }, [user])
+    // console.log('user from login', {
+    //     user
+    // })
     const handleSubmit = async (values: { email: string, password: string }) => {
         try {
             setLoading(true)
             const response = await login(values)
-            console.log(user)
+            // console.log(user)
             setUser(response.user)
             navigate('Tab')
         } catch (err: any) {

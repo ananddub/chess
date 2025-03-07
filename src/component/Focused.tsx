@@ -4,7 +4,7 @@ import { IconImage } from '../helpers/GetIcons';
 import responsive from '../helpers/responsive';
 import Animated from 'react-native-reanimated';
 import { MotiView } from 'moti';
-import { createStyleSheet } from 'react-native-unistyles';
+import { createStyleSheet, useStyles } from 'react-native-unistyles';
 interface Props {
     route: string;
     color: string;
@@ -31,6 +31,7 @@ function Icons({ image, color, size }: {
 export default function Focused({ color, route }: Props) {
     const size = 25
     const { width } = useWindowDimensions()
+    const { styles, theme } = useStyles(unistyles)
     return (<View style={{
         gap: 4,
         alignItems: 'center',
@@ -72,16 +73,16 @@ export default function Focused({ color, route }: Props) {
                 width: (width / 4.5) / 2.2
             }}
             transition={{ type: 'timing' }}
-            style={styles.bar(color)}
+            style={styles.bar()}
         />
     </View>)
 }
 
-const styles = createStyleSheet({
+const unistyles = createStyleSheet((theme, rtl) => ({
 
-    bar: (color: string) => ({
+    bar: (color: string = theme.colors.primary) => ({
         backgroundColor: color,
         borderRadius: 100,
         height: 3
     })
-})
+}))

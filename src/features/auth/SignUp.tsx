@@ -39,7 +39,8 @@ export default function SignUp() {
             setLoading(true);
             const response = await register(values);
             Alert.alert("your account created suscessfully")
-            console.log('Sign Up Data:', response);
+            // console.log('Sign Up Data:', response);
+
             goBack()
         } catch (err: any) {
             console.log(err?.response?.data?.error);

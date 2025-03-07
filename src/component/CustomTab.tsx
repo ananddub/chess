@@ -11,33 +11,35 @@ export default function CustomTab(props: BottomTabBarProps) {
     const { styles, theme } = useStyles(unistyles);
 
     return (
-        <View>
-            <View style={styles.container}>
-                {state.routes.map((route, index) => {
-                    const isFocused = state.index === index;
-                    const onPress = () => {
-                        const event = navigation.emit({
-                            type: 'tabPress',
-                            target: route.key,
-                            canPreventDefault: true,
-                        });
+        <View style={styles.container}>
+            {state.routes.map((route, index) => {
+                const isFocused = state.index === index;
+                const onPress = () => {
+                    const event = navigation.emit({
+                        type: 'tabPress',
+                        target: route.key,
+                        canPreventDefault: true,
+                    });
 
-                        if (!isFocused && !event.defaultPrevented) {
-                            navigation.navigate(route.name, { merge: true });
-                        }
-                    };
+                    if (!isFocused && !event.defaultPrevented) {
+                        navigation.navigate(route.name, { merge: true });
+                    }
+                };
 
-                    return isFocused ?
-                        (<Focused route={route.name} color={theme.colors.secondary} />)
-                        : (
-                            <UnFocused
-                                onPress={onPress}
-                                route={route.name}
-                                color={theme.colors.lightsecondary(0.3)}
-                            />
-                        );
-                })}
-            </View>
+                return <View key={route.key} style={styles.touchable}>
+                    {
+                        isFocused ?
+                            (<Focused route={route.name} color={theme.colors.secondary} />)
+                            : (
+                                <UnFocused
+                                    onPress={onPress}
+                                    route={route.name}
+                                    color={theme.colors.lightsecondary(0.35)}
+                                />
+                            )
+                    }
+                </View>
+            })}
         </View>
     );
 }

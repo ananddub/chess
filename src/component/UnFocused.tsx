@@ -35,7 +35,6 @@ export default function UnFocused({ onPress, route, color }: Props) {
             'worklet'
 
             return {
-                scale: pressed ? 0.80 : hovered ? 1.1 : 1,
             }
         },
         []

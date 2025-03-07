@@ -12,6 +12,9 @@ export const IconImage = {
     fill_queen: require('../assets/image/fill_queen.png'),
     fill_chess: require('../assets/image/fill-chess-board.png'),
     out_chess: require('../assets/image/out-chess-board.png'),
+    fill_queens: require('../assets/image/fill_queens.png'),
+    out_queens: require('../assets/image/out_queens.png'),
+    chessboard: require('../assets/image/chessboard.png'),
 };
 
 export const IconLotiee = {
